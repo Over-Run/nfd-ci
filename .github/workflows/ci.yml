@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-${{matrix.ARCH}}
-          path: build/libnfd.so
+          path: build/src/libnfd.so
           if-no-files-found: error
 
   linux-cross:
@@ -114,7 +114,7 @@ jobs:
           dpkg --add-architecture ${{matrix.CROSS_ARCH}}
           apt-get update
       - name: Install dependencies
-        run: apt-get -yq --no-install-suggests --no-install-recommends install gcc-${{matrix.TRIPLET}} libc6-dev-${{matrix.CROSS_ARCH}}-cross libgtk-3-dev-${{matrix.CROSS_ARCH}}
+        run: apt-get -yq --no-install-suggests --no-install-recommends install gcc-${{matrix.TRIPLET}} libc6-dev-${{matrix.CROSS_ARCH}}-cross libgtk-3-dev:${{matrix.CROSS_ARCH}}
       - name: Configure build
         run: PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:${CMAKE_SYSROOT}/usr/lib/${{matrix.TRIPLET}}/pkgconfig CC=${{matrix.TRIPLET}}-gcc cmake -B build $CI_PARAMS -DCMAKE_C_FLAGS="-std=c99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
       - name: Build
@@ -178,12 +178,12 @@ jobs:
       - name: Build
         run: |
           cmake --build build --parallel
-          strip -u -r build/libnfd.dylib
+          strip -u -r build/src/libnfd.dylib
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos-${{matrix.ARCH}}
-          path: build/libnfd.dylib
+          path: build/src/libnfd.dylib
           if-no-files-found: error
 
   windows:
@@ -212,5 +212,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-${{matrix.ARCH}}
-          path: build\Release\nfd.dll
+          path: build\src\Release\nfd.dll
           if-no-files-found: error
