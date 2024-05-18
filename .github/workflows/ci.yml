@@ -147,7 +147,7 @@ jobs:
           shell: bash
           environment_variables: CI_PARAMS
           run: |
-            sudo pkg install -y cmake gmake pkgconf
+            sudo pkg install -y cmake gmake pkgconf gtk3
             cmake -B build $CI_PARAMS -DCMAKE_C_FLAGS="-std=c99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
             cmake --build build --parallel
             strip build/src/libnfd.so
