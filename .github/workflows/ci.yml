@@ -41,7 +41,7 @@ jobs:
         run: |
           source scl_source enable devtoolset-11 || true
           cmake --build build --parallel
-          strip build/libnfd.so
+          strip build/src/libnfd.so
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -114,18 +114,18 @@ jobs:
           dpkg --add-architecture ${{matrix.CROSS_ARCH}}
           apt-get update
       - name: Install dependencies
-        run: apt-get -yq --no-install-suggests --no-install-recommends install gcc-${{matrix.TRIPLET}} libc6-dev-${{matrix.CROSS_ARCH}}-cross libgtk-3-dev:${{matrix.CROSS_ARCH}}
+        run: apt-get -yq --no-install-suggests --no-install-recommends install gcc-${{matrix.TRIPLET}} g++-${{matrix.TRIPLET}} libc6-dev-${{matrix.CROSS_ARCH}}-cross libgtk-3-dev:${{matrix.CROSS_ARCH}}
       - name: Configure build
         run: PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:${CMAKE_SYSROOT}/usr/lib/${{matrix.TRIPLET}}/pkgconfig CC=${{matrix.TRIPLET}}-gcc cmake -B build $CI_PARAMS -DCMAKE_C_FLAGS="-std=c99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
       - name: Build
         run: |
           cmake --build build --parallel
-          ${{matrix.TRIPLET}}-strip build/libnfd.so
+          ${{matrix.TRIPLET}}-strip build/src/libnfd.so
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: linux-${{matrix.ARCH}}
-          path: build/libnfd.so
+          path: build/src/libnfd.so
           if-no-files-found: error
 
   freebsd-cross:
@@ -147,15 +147,15 @@ jobs:
           shell: bash
           environment_variables: CI_PARAMS
           run: |
-            sudo pkg install -y cmake gmake pkgconf libgtk-3-dev
+            sudo pkg install -y cmake gmake pkgconf
             cmake -B build $CI_PARAMS -DCMAKE_C_FLAGS="-std=c99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
             cmake --build build --parallel
-            strip build/libnfd.so
+            strip build/src/libnfd.so
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: freebsd-x64
-          path: build/libnfd.so
+          path: build/src/libnfd.so
           if-no-files-found: error
 
   macos:
