@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-cmake_minimum_required(VERSION 3.5)
-project(nfd VERSION 1.2.1)
-=======
 cmake_minimum_required(VERSION 3.10)
-project(nativefiledialog-extended VERSION 1.2.1)
->>>>>>> a1a401062819beb8c3da84518ab1fe7de88632db
+project(nfd VERSION 1.2.1)
 
 set(nfd_ROOT_PROJECT OFF)
 if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
